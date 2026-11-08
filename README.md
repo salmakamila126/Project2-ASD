@@ -16,18 +16,21 @@ Program berbasis **Java** untuk menentukan mata kuliah yang dapat diambil pada s
 ## 1. Struktur folder
 
 ```text
-Proyek2_ASD/
-├── Main.java                  # Source code program (semua class dalam satu file)
-├── matakuliah.csv             # Data seluruh mata kuliah
-├── prasyarat.csv              # Data relasi prasyarat
-├── mhs_01.txt                 # Contoh mahasiswa 1
-├── mhs_02.txt                 # Contoh mahasiswa 2
-├── mhs_03.txt                 # Contoh mahasiswa 3
-├── output_mhs_01.txt         # Hasil pengujian mahasiswa 1
-├── output_mhs_02.txt         # Hasil pengujian mahasiswa 2
-├── output_mhs_03.txt         # Hasil pengujian mahasiswa 3
-├── Laporan_Proyek2_ASD.pdf   # Laporan struktur data dan algoritma
-└── README.md
+
+Project2-/
+├── README.md                   # Dokumentasi utama repository
+└── Proyek2_ASD/
+    ├── .gitignore              # Konfigurasi file yang diabaikan Git
+    ├── Main.java               # Source code program (semua class dalam satu file)
+    ├── matakuliah.csv          # Data seluruh mata kuliah
+    ├── prasyarat.csv           # Data relasi prasyarat
+    ├── mhs_01.txt              # Contoh mahasiswa 1
+    ├── mhs_02.txt              # Contoh mahasiswa 2
+    ├── mhs_03.txt              # Contoh mahasiswa 3
+    ├── output_mhs_01.txt       # Hasil pengujian mahasiswa 1
+    ├── output_mhs_02.txt       # Hasil pengujian mahasiswa 2
+    ├── output_mhs_03.txt       # Hasil pengujian mahasiswa 3
+    └── Laporan_Proyek2_ASD.pdf # Laporan struktur data dan algoritma
 ```
 
 **Penting:** `Main.java` memang hanya satu file agar mudah dikompilasi, tetapi file **CSV dan TXT harus tetap terpisah**. Program tidak menanamkan isi CSV/TXT langsung ke dalam kode. File-file tersebut dibaca ketika program dijalankan.
