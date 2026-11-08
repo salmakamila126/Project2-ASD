@@ -1,0 +1,2 @@
+semester_berikutnya=genap
+lulus=RPL,PDAS,PKK,AOK,KAL,STP,AGM

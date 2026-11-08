@@ -1,0 +1,18 @@
+SEMESTER BERIKUTNYA: GANJIL
+
+Daftar MK yang bisa diambil:
+ 1. PAPB  Pengembangan Aplikasi Perangkat Bergerak        3 SKS
+ 2. JN    Jaringan Nirkabel                               3 SKS
+ 3. KG    Komputer Grafis                                 2 SKS
+ 4. JST   Jaringan Saraf Tiruan                           3 SKS
+ 5. SI    Statistika Inferensi                            2 SKS
+ 6. MPPI  Metodologi Penelitian dan Penulisan Ilmiah      3 SKS
+ 7. BIND  Bahasa Indonesia                                2 SKS
+ 8. PKL   Praktik Kerja Lapangan                          4 SKS
+ 9. SKR   Skripsi                                         6 SKS
+Total: 9 MK, 28 SKS (belum memperhitungkan batas SKS/KRS).
+
+Daftar MK yang belum bisa diambil semester depan:
+(Tidak ada)
+
+Catatan: mata kuliah yang sudah lulus atau tidak ditawarkan pada periode ini tidak ditampilkan.

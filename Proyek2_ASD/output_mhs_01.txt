@@ -1,0 +1,24 @@
+SEMESTER BERIKUTNYA: GENAP
+
+Daftar MK yang bisa diambil:
+ 1. BD    Basis Data                                      3 SKS
+ 2. PLAN  Pemrograman Lanjut                              5 SKS
+ 3. SO    Sistem Operasi                                  5 SKS
+ 4. MD    Matematika Diskret                              2 SKS
+ 5. AL    Aljabar Linear                                  2 SKS
+ 6. EP    Etika Profesi                                   2 SKS
+ 7. BING  Bahasa Inggris                                  2 SKS
+ 8. PANC  Pancasila                                       2 SKS
+ 9. KWU   Kewirausahaan                                   2 SKS
+10. KWN   Kewarganegaraan                                 2 SKS
+11. CAP   Capstone Project                                3 SKS
+12. SKR   Skripsi                                         6 SKS
+Total: 12 MK, 36 SKS (belum memperhitungkan batas SKS/KRS).
+
+Daftar MK yang belum bisa diambil semester depan:
+PAW (Pengembangan Aplikasi Web): belum lulus IMK
+DAA (Desain dan Analisis Algoritma): belum lulus ASD
+KI (Keamanan Informasi): belum lulus JK
+KALJ (Kecerdasan Artifisial Lanjut): belum lulus KA
+
+Catatan: mata kuliah yang sudah lulus atau tidak ditawarkan pada periode ini tidak ditampilkan.

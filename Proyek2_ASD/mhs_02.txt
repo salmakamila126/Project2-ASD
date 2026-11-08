@@ -1,0 +1,2 @@
+semester_berikutnya=ganjil
+lulus=RPL,PDAS,PKK,AOK,KAL,STP,AGM,BD,PLAN,MD,AL,EP,BING,APS,ASD,KA,MN,PANC,KWU,KWN

@@ -1,0 +1,38 @@
+Kode;Nama;sks;semester;ganjil/genap
+RPL;Rekayasa Perangkat Lunak;4;1;Ganjil
+PDAS;Pemrograman Dasar;5;1;Ganjil
+PKK;Pengenalan Keilmuan Komputer;2;1;Ganjil
+AOK;Arsitektur dan Organisasi Komputer;2;1;Ganjil
+KAL;Kalkulus;2;1;Ganjil
+STP;Statistik dan Teori Peluang;2;1;Ganjil
+AGM;Agama;2;1;Ganjil
+BD;Basis Data;3;2;Genap
+PLAN;Pemrograman Lanjut;5;2;Genap
+SO;Sistem Operasi;5;2;Genap
+MD;Matematika Diskret;2;2;Genap
+AL;Aljabar Linear;2;2;Genap
+EP;Etika Profesi;2;2;Genap
+BING;Bahasa Inggris;2;2;Genap
+APS;Analisis Perancangan Sistem;5;3;Ganjil
+ASD;Algoritma dan Struktur Data;3;3;Ganjil
+JK;Jaringan Komputer;5;3;Ganjil
+KA;Kecerdasan Artifisial;2;3;Ganjil
+MN;Metode Numerik;3;3;Ganjil
+IMK;Interaksi Manusia dan Komputer;2;3;Ganjil
+PAW;Pengembangan Aplikasi Web;3;4;Genap
+DAA;Desain dan Analisis Algoritma;2;4;Genap
+KI;Keamanan Informasi;5;4;Genap
+KALJ;Kecerdasan Artifisial Lanjut;5;4;Genap
+PANC;Pancasila;2;4;Genap
+KWU;Kewirausahaan;2;4;Genap
+KWN;Kewarganegaraan;2;4;Genap
+PAPB;Pengembangan Aplikasi Perangkat Bergerak;3;5;Ganjil
+JN;Jaringan Nirkabel;3;5;Ganjil
+KG;Komputer Grafis;2;5;Ganjil
+JST;Jaringan Saraf Tiruan;3;5;Ganjil
+SI;Statistika Inferensi;2;5;Ganjil
+MPPI;Metodologi Penelitian dan Penulisan Ilmiah;3;5;Ganjil
+BIND;Bahasa Indonesia;2;5;Ganjil
+CAP;Capstone Project;3;6;Genap
+PKL;Praktik Kerja Lapangan;4;7;Ganjil
+SKR;Skripsi;6;8;Keduanya
