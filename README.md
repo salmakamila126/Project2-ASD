@@ -16,21 +16,20 @@ Program berbasis **Java** untuk menentukan mata kuliah yang dapat diambil pada s
 ## 1. Struktur folder
 
 ```text
-
 Project2-/
-├── README.md                   # Dokumentasi utama repository
+├── README.md
 └── Proyek2_ASD/
-    ├── .gitignore              # Konfigurasi file yang diabaikan Git
-    ├── Main.java               # Source code program (semua class dalam satu file)
-    ├── matakuliah.csv          # Data seluruh mata kuliah
-    ├── prasyarat.csv           # Data relasi prasyarat
-    ├── mhs_01.txt              # Contoh mahasiswa 1
-    ├── mhs_02.txt              # Contoh mahasiswa 2
-    ├── mhs_03.txt              # Contoh mahasiswa 3
-    ├── output_mhs_01.txt       # Hasil pengujian mahasiswa 1
-    ├── output_mhs_02.txt       # Hasil pengujian mahasiswa 2
-    ├── output_mhs_03.txt       # Hasil pengujian mahasiswa 3
-    └── Laporan_Proyek2_ASD.pdf # Laporan struktur data dan algoritma
+    ├── .gitignore
+    ├── Main.java
+    ├── matakuliah.csv
+    ├── prasyarat.csv
+    ├── mhs_01.txt
+    ├── mhs_02.txt
+    ├── mhs_03.txt
+    ├── output_mhs_01.txt
+    ├── output_mhs_02.txt
+    ├── output_mhs_03.txt
+    └── Laporan_Proyek2_ASD.pdf
 ```
 
 **Penting:** `Main.java` memang hanya satu file agar mudah dikompilasi, tetapi file **CSV dan TXT harus tetap terpisah**. Program tidak menanamkan isi CSV/TXT langsung ke dalam kode. File-file tersebut dibaca ketika program dijalankan.
@@ -50,18 +49,19 @@ javac -version
 
 ## 3. Cara menjalankan
 
-Buka terminal **di dalam folder `Proyek2_ASD`**, kemudian:
+Buka terminal di root repository, kemudian:
 
 ```bash
+cd Proyek2_ASD
 javac Main.java
-java Main matakuliah.csv prasyarat.csv mhs_01.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_01.txt
 ```
 
 Coba data mahasiswa lainnya:
 
 ```bash
-java Main matakuliah.csv prasyarat.csv mhs_02.txt
-java Main matakuliah.csv prasyarat.csv mhs_03.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_02.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_03.txt
 ```
 
 Perintah `javac Main.java` mengompilasi source code menjadi berkas `.class`. Perintah `java Main ...` menjalankan program, sedangkan tiga argumen di belakangnya adalah **nama/path file input**. Java tidak otomatis mencari file tersebut jika lokasinya berbeda dari direktori kerja saat ini.
@@ -69,7 +69,7 @@ Perintah `javac Main.java` mengompilasi source code menjadi berkas `.class`. Per
 Bentuk umum:
 
 ```text
-java Main <lokasi_matakuliah.csv> <lokasi_prasyarat.csv> <lokasi_mhs.txt>
+java -cp . Main <lokasi_matakuliah.csv> <lokasi_prasyarat.csv> <lokasi_mhs.txt>
 ```
 
 Contoh Windows PowerShell bila menjalankan dari folder induk:
@@ -77,7 +77,7 @@ Contoh Windows PowerShell bila menjalankan dari folder induk:
 ```powershell
 javac .\Proyek2_ASD\Main.java
 cd .\Proyek2_ASD
-java Main matakuliah.csv prasyarat.csv mhs_01.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_01.txt
 ```
 
 Jika muncul `FileNotFoundException` atau `Gagal memproses berkas`, periksa bahwa nama/path file sesuai dan terminal sedang berada di folder yang benar.
@@ -159,8 +159,9 @@ Aturan keputusan untuk satu mata kuliah:
 
 1. Jika **sudah lulus**, lewati (tidak direkomendasikan kembali).
 2. Jika **tidak ditawarkan** pada periode semester berikutnya, lewati.
-3. Jika **semua prasyarat langsung** di `prasyarat.csv` sudah lulus, tampilkan pada daftar **bisa diambil**.
-4. Jika **ada prasyarat yang belum lulus**, tampilkan pada daftar **belum bisa diambil**, disertai kode mata kuliah prasyarat yang kurang.
+3. Untuk `SKR`, periksa seluruh MK wajib selain `SKR` pada `DaftarMK` melalui `syaratBelumLulus()`, tanpa membatasi periode penawaran MK yang diperiksa. Karena TXT hanya menyimpan daftar lulus, status lulus digunakan sebagai indikator bahwa MK telah diambil/diselesaikan.
+4. Jika **semua syarat** di `prasyarat.csv` sudah lulus, tampilkan pada daftar **bisa diambil**.
+5. Jika **ada prasyarat yang belum lulus**, tampilkan pada daftar **belum bisa diambil**, disertai kode mata kuliah prasyarat yang kurang.
 
 Urutan hasil mengikuti urutan baris `matakuliah.csv`.
 
@@ -168,19 +169,23 @@ Urutan hasil mengikuti urutan baris `matakuliah.csv`.
 
 | Input mahasiswa | Bisa diambil | Terkendala prasyarat |
 | --- | ---: | ---: |
-| `mhs_01.txt` | 12 MK | 4 MK |
-| `mhs_02.txt` | 5 MK | 6 MK |
-| `mhs_03.txt` | 9 MK | 0 MK |
+| `mhs_01.txt` | 11 MK | 5 MK |
+| `mhs_02.txt` | 4 MK | 7 MK |
+| `mhs_03.txt` | 8 MK | 1 MK |
 
 Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt`, `output_mhs_02.txt`, dan `output_mhs_03.txt`.
 
 ## 8. Batasan
 
-- Sistem mengikuti data yang tersedia pada file pendukung; tidak menentukan batas maksimal SKS KRS, IP semester, atau syarat akademik tambahan.
-- Dataset tidak mencantumkan prasyarat untuk beberapa MK seperti `CAP`, `PKL`, dan `SKR`. Sistem tidak mengarang prasyarat baru sehingga MK tersebut bisa muncul sebagai rekomendasi sesuai periodenya.
+- Sistem mengikuti data yang tersedia pada file pendukung; tidak menentukan batas maksimal SKS KRS, IP semester, atau syarat akademik tambahan di luar aturan khusus Skripsi.
+- Dataset tidak mencantumkan prasyarat untuk beberapa MK seperti `CAP` dan `PKL`. Keduanya tetap mengikuti periode penawaran dan data prasyarat. Untuk `SKR`, aturan khusus instruksi terbaru mewajibkan seluruh MK wajib lain di daftar sudah lulus.
 - Mata kuliah yang sudah lulus atau tidak ditawarkan pada periode berikutnya tidak masuk ke dua daftar hasil.
 - Oleh karena itu, output adalah **simulasi rekomendasi berdasarkan dataset**, bukan persetujuan KRS resmi.
 
+Pengujian tambahan: Skripsi dapat diambil pada Ganjil maupun Genap jika 36 MK wajib lainnya sudah lulus; jika CAP saja belum lulus, Skripsi tetap ditolak.
+
 ## 9. Pengumpulan
+
+[Laporan Proyek 2 ASD](Proyek2_ASD/Laporan_Proyek2_ASD.pdf)
 
 Unggah `Main.java`, CSV, TXT, `README.md`, dan `Laporan_Proyek2_ASD.pdf` ke repository GitHub/GitLab kelompok. Sertakan hasil pengujian untuk membantu pemeriksaan. Kumpulkan **link repository** di Brone sesuai instruksi tugas.

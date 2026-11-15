@@ -1,4 +1,4 @@
-SEMESTER BERIKUTNYA: GENAP
+﻿SEMESTER BERIKUTNYA: GENAP
 
 Daftar MK yang bisa diambil:
  1. BD    Basis Data                                      3 SKS
