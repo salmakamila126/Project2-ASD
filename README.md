@@ -26,9 +26,15 @@ Project2-/
     ├── mhs_01.txt
     ├── mhs_02.txt
     ├── mhs_03.txt
+    ├── mhs_04.txt
+    ├── mhs_05.txt
+    ├── mhs_06.txt
     ├── output_mhs_01.txt
     ├── output_mhs_02.txt
     ├── output_mhs_03.txt
+    ├── output_mhs_04.txt
+    ├── output_mhs_05.txt
+    ├── output_mhs_06.txt
     └── Laporan_Proyek2_ASD.pdf
 ```
 
@@ -62,6 +68,9 @@ Coba data mahasiswa lainnya:
 ```bash
 java -cp . Main matakuliah.csv prasyarat.csv mhs_02.txt
 java -cp . Main matakuliah.csv prasyarat.csv mhs_03.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_04.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_05.txt
+java -cp . Main matakuliah.csv prasyarat.csv mhs_06.txt
 ```
 
 Perintah `javac Main.java` mengompilasi source code menjadi berkas `.class`. Perintah `java Main ...` menjalankan program, sedangkan tiga argumen di belakangnya adalah **nama/path file input**. Java tidak otomatis mencari file tersebut jika lokasinya berbeda dari direktori kerja saat ini.
@@ -124,7 +133,7 @@ Alur program saat menerima tiga argumen:
 2. `bacaMataKuliah(args[0])` membuka CSV pertama menggunakan `FileReader` dan `BufferedReader`; setiap baris dipecah dengan `split(";", -1)`, lalu dimasukkan ke *linked list* mata kuliah buatan sendiri.
 3. `bacaPrasyarat(args[1], daftar)` membuka CSV kedua; setiap relasi prasyarat disimpan dalam *linked list* relasi.
 4. `bacaMahasiswa(args[2], daftar)` membuka TXT; memisahkan `key=value`, membaca periode, dan menyimpan kode mata kuliah lulus dalam *linked list* kode.
-5. `rekomendasi(...)` menelusuri seluruh mata kuliah dan mengecek periode penawaran, status kelulusan, serta prasyarat.
+5. `rekomendasi(...)` menelusuri seluruh mata kuliah **satu kali** dan mengecek periode penawaran, status kelulusan, serta prasyarat.
 6. Program mencetak dua kelompok hasil: **bisa diambil** dan **belum bisa diambil karena prasyarat**.
 
 Cuplikan pembacaan dari source code:
@@ -161,19 +170,22 @@ Aturan keputusan untuk satu mata kuliah:
 2. Jika **tidak ditawarkan** pada periode semester berikutnya, lewati.
 3. Untuk `SKR`, periksa seluruh MK wajib selain `SKR` pada `DaftarMK` melalui `syaratBelumLulus()`, tanpa membatasi periode penawaran MK yang diperiksa. Karena TXT hanya menyimpan daftar lulus, status lulus digunakan sebagai indikator bahwa MK telah diambil/diselesaikan.
 4. Jika **semua syarat** di `prasyarat.csv` sudah lulus, tampilkan pada daftar **bisa diambil**.
-5. Jika **ada prasyarat yang belum lulus**, tampilkan pada daftar **belum bisa diambil**, disertai kode mata kuliah prasyarat yang kurang.
+5. Jika **ada prasyarat yang belum lulus**, tampilkan pada daftar **belum bisa diambil**, disertai seluruh kode prasyarat yang belum lulus, termasuk prasyarat dari prasyarat (contoh: `PAW: belum lulus SO, IMK`, karena PAW butuh IMK dan IMK butuh SO). Penelusuran ini dilakukan secara rekursif pada linked list relasi.
 
 Urutan hasil mengikuti urutan baris `matakuliah.csv`.
 
 ## 7. Hasil pengujian
 
-| Input mahasiswa | Bisa diambil | Terkendala prasyarat |
-| --- | ---: | ---: |
-| `mhs_01.txt` | 11 MK | 5 MK |
-| `mhs_02.txt` | 4 MK | 7 MK |
-| `mhs_03.txt` | 8 MK | 1 MK |
+| Input mahasiswa | Periode | Bisa diambil | Terkendala prasyarat | Total SKS (bisa) | Keterangan |
+| --- | --- | ---: | ---: | ---: | --- |
+| `mhs_01.txt` | Genap | 11 MK | 5 MK | 30 | 7 MK lulus; SKR ditolak |
+| `mhs_02.txt` | Ganjil | 4 MK | 7 MK | 12 | 20 MK lulus; SKR ditolak |
+| `mhs_03.txt` | Ganjil | 8 MK | 1 MK | 22 | 28 MK lulus; SKR ditolak |
+| `mhs_04.txt` | Genap | 1 MK | 0 MK | 6 | 36 MK wajib lulus; SKR diterima |
+| `mhs_05.txt` | Ganjil | 0 MK | 1 MK | 0 | semua lulus kecuali CAP; SKR ditolak |
+| `mhs_06.txt` | Ganjil | 1 MK | 0 MK | 6 | 36 MK wajib lulus; SKR diterima |
 
-Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt`, `output_mhs_02.txt`, dan `output_mhs_03.txt`.
+Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt` sampai `output_mhs_06.txt`. `mhs_01`-`mhs_03` adalah data dari soal; `mhs_04`-`mhs_06` adalah data uji tambahan untuk aturan khusus Skripsi.
 
 ## 8. Batasan
 
@@ -182,7 +194,7 @@ Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt`,
 - Mata kuliah yang sudah lulus atau tidak ditawarkan pada periode berikutnya tidak masuk ke dua daftar hasil.
 - Oleh karena itu, output adalah **simulasi rekomendasi berdasarkan dataset**, bukan persetujuan KRS resmi.
 
-Pengujian tambahan: Skripsi dapat diambil pada Ganjil maupun Genap jika 36 MK wajib lainnya sudah lulus; jika CAP saja belum lulus, Skripsi tetap ditolak.
+Pengujian tambahan (`mhs_04`-`mhs_06`): Skripsi dapat diambil pada Ganjil maupun Genap jika 36 MK wajib lainnya sudah lulus; jika CAP saja belum lulus, Skripsi tetap ditolak.
 
 ## 9. Pengumpulan
 

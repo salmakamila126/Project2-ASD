@@ -56,16 +56,22 @@ public class Main {
             if (head == null) head = tail = baru;
             else { tail.next = baru; tail = baru; }
         }
+        /** Prasyarat belum lulus, termasuk prasyarat dari prasyarat (contoh PAW: "SO, IMK"). */
         String yangBelumLulus(String kodeMK, DaftarKode lulus) {
-            String hasil = "";
+            DaftarKode hasil = new DaftarKode();
+            kumpulkanBelumLulus(kodeMK, lulus, hasil);
+            return hasil.gabung();
+        }
+        /** Penelusuran rekursif; prasyarat paling awal dicatat lebih dulu, tanpa duplikat. */
+        void kumpulkanBelumLulus(String kodeMK, DaftarKode lulus, DaftarKode hasil) {
             for (NodePrasyarat p = head; p != null; p = p.next) {
+                String kodeSyarat = p.data.kodeSyarat;
                 if (p.data.kodeTujuan.equalsIgnoreCase(kodeMK)
-                        && !lulus.ada(p.data.kodeSyarat)) {
-                    if (!hasil.isEmpty()) hasil += ", ";
-                    hasil += p.data.kodeSyarat;
+                        && !lulus.ada(kodeSyarat) && !hasil.ada(kodeSyarat)) {
+                    kumpulkanBelumLulus(kodeSyarat, lulus, hasil);
+                    hasil.tambah(kodeSyarat);
                 }
             }
-            return hasil;
         }
     }
 
@@ -86,6 +92,14 @@ public class Main {
             for (NodeKode p = head; p != null; p = p.next)
                 if (p.kode.equalsIgnoreCase(kode)) return true;
             return false;
+        }
+        String gabung() {
+            StringBuilder sb = new StringBuilder();
+            for (NodeKode p = head; p != null; p = p.next) {
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(p.kode);
+            }
+            return sb.toString();
         }
     }
 
@@ -134,6 +148,8 @@ public class Main {
                 String asal = kolom[0].trim(), tujuan = kolom[1].trim();
                 if (daftar.cari(asal) == null || daftar.cari(tujuan) == null)
                     throw new IOException("Kode prasyarat tidak dikenal pada baris " + nomor);
+                if (asal.equalsIgnoreCase(tujuan))
+                    throw new IOException("MK tidak boleh menjadi prasyarat dirinya sendiri, baris " + nomor);
                 syarat.tambah(asal, tujuan);
             }
         }
@@ -177,36 +193,38 @@ public class Main {
                 || mk.periode.equalsIgnoreCase("Keduanya");
     }
 
+    /** Prasyarat belum lulus. MK biasa: lewat prasyarat.csv. SKR: seluruh MK wajib lain harus lulus. */
+    static String syaratBelumLulus(MataKuliah mk, DaftarMK daftar, DaftarPrasyarat syarat, DaftarKode lulus) {
+        if (!mk.kode.equalsIgnoreCase("SKR")) return syarat.yangBelumLulus(mk.kode, lulus);
+        String hasil = "";
+        for (NodeMK p = daftar.head; p != null; p = p.next) {
+            if (p.data.kode.equalsIgnoreCase("SKR")) continue;
+            if (!lulus.ada(p.data.kode)) {
+                if (!hasil.isEmpty()) hasil += ", ";
+                hasil += p.data.kode;
+            }
+        }
+        return hasil;
+    }
+
+    /** Satu kali penelusuran: MK bisa diambil langsung dicetak, alasan MK belum bisa ditampung dulu. */
     static void rekomendasi(DaftarMK daftar, DaftarPrasyarat syarat, Mahasiswa mhs) {
-        System.out.println("SEMESTER BERIKUTNYA: " + mhs.periode.toUpperCase());
-        System.out.println("\nDaftar MK yang bisa diambil:");
-        int jumlahBisa = 0, sksBisa = 0;
+        StringBuilder belum = new StringBuilder();
+        int nomor = 0;
+        System.out.println("Daftar MK yang bisa diambil:");
         for (NodeMK p = daftar.head; p != null; p = p.next) {
             MataKuliah mk = p.data;
             if (mhs.lulus.ada(mk.kode) || !ditawarkan(mk, mhs.periode)) continue;
-            if (syarat.yangBelumLulus(mk.kode, mhs.lulus).isEmpty()) {
-                jumlahBisa++;
-                sksBisa += mk.sks;
-                System.out.printf("%2d. %-5s %-47s %d SKS%n",
-                        jumlahBisa, mk.kode, mk.nama, mk.sks);
-            }
+            String kurang = syaratBelumLulus(mk, daftar, syarat, mhs.lulus);
+            if (kurang.isEmpty())
+                System.out.println(++nomor + ". " + mk.kode + " " + mk.nama + " " + mk.sks + " SKS");
+            else
+                belum.append(mk.kode).append(": belum lulus ").append(kurang).append(System.lineSeparator());
         }
-        if (jumlahBisa == 0) System.out.println("(Tidak ada)");
-        System.out.println("Total: " + jumlahBisa + " MK, " + sksBisa + " SKS (belum memperhitungkan batas SKS/KRS).");
+        if (nomor == 0) System.out.println("(Tidak ada)");
 
         System.out.println("\nDaftar MK yang belum bisa diambil semester depan:");
-        int jumlahBelum = 0;
-        for (NodeMK p = daftar.head; p != null; p = p.next) {
-            MataKuliah mk = p.data;
-            if (mhs.lulus.ada(mk.kode) || !ditawarkan(mk, mhs.periode)) continue;
-            String kurang = syarat.yangBelumLulus(mk.kode, mhs.lulus);
-            if (!kurang.isEmpty()) {
-                jumlahBelum++;
-                System.out.println(mk.kode + " (" + mk.nama + "): belum lulus " + kurang);
-            }
-        }
-        if (jumlahBelum == 0) System.out.println("(Tidak ada)");
-        System.out.println("\nCatatan: mata kuliah yang sudah lulus atau tidak ditawarkan pada periode ini tidak ditampilkan.");
+        System.out.print(belum.length() == 0 ? "(Tidak ada)" + System.lineSeparator() : belum.toString());
     }
 
     public static void main(String[] args) {
