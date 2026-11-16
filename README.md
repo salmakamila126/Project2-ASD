@@ -16,7 +16,7 @@ Program berbasis **Java** untuk menentukan mata kuliah yang dapat diambil pada s
 ## 1. Struktur folder
 
 ```text
-Project2-/
+Project2-ASD/
 ├── README.md
 └── Proyek2_ASD/
     ├── .gitignore
@@ -133,8 +133,8 @@ Alur program saat menerima tiga argumen:
 2. `bacaMataKuliah(args[0])` membuka CSV pertama menggunakan `FileReader` dan `BufferedReader`; setiap baris dipecah dengan `split(";", -1)`, lalu dimasukkan ke *linked list* mata kuliah buatan sendiri.
 3. `bacaPrasyarat(args[1], daftar)` membuka CSV kedua; setiap relasi prasyarat disimpan dalam *linked list* relasi.
 4. `bacaMahasiswa(args[2], daftar)` membuka TXT; memisahkan `key=value`, membaca periode, dan menyimpan kode mata kuliah lulus dalam *linked list* kode.
-5. `rekomendasi(...)` menelusuri seluruh mata kuliah **satu kali** dan mengecek periode penawaran, status kelulusan, serta prasyarat.
-6. Program mencetak dua kelompok hasil: **bisa diambil** dan **belum bisa diambil karena prasyarat**.
+5. `rekomendasi(...)` melakukan **satu penelusuran utama kandidat mata kuliah**, mengecek periode penawaran, status kelulusan, serta prasyarat. Pemeriksaan khusus SKR menelusuri daftar MK wajib secara terpisah.
+6. MK yang bisa diambil langsung dicetak; alasan MK yang belum bisa diambil ditampung dalam `StringBuilder` dan dicetak setelah penelusuran utama selesai.
 
 Cuplikan pembacaan dari source code:
 
@@ -168,9 +168,9 @@ Aturan keputusan untuk satu mata kuliah:
 
 1. Jika **sudah lulus**, lewati (tidak direkomendasikan kembali).
 2. Jika **tidak ditawarkan** pada periode semester berikutnya, lewati.
-3. Untuk `SKR`, periksa seluruh MK wajib selain `SKR` pada `DaftarMK` melalui `syaratBelumLulus()`, tanpa membatasi periode penawaran MK yang diperiksa. Karena TXT hanya menyimpan daftar lulus, status lulus digunakan sebagai indikator bahwa MK telah diambil/diselesaikan.
-4. Jika **semua syarat** di `prasyarat.csv` sudah lulus, tampilkan pada daftar **bisa diambil**.
-5. Jika **ada prasyarat yang belum lulus**, tampilkan pada daftar **belum bisa diambil**, disertai seluruh kode prasyarat yang belum lulus, termasuk prasyarat dari prasyarat (contoh: `PAW: belum lulus SO, IMK`, karena PAW butuh IMK dan IMK butuh SO). Penelusuran ini dilakukan secara rekursif pada linked list relasi.
+3. Panggil `syaratBelumLulus()` satu kali untuk setiap kandidat. Untuk MK biasa, `yangBelumLulus()` memanggil `kumpulkanBelumLulus()` secara rekursif melalui linked list relasi, mengumpulkan prasyarat yang belum lulus tanpa duplikasi, lalu `gabung()` menyusun kode-kodenya menjadi string (contoh: `PAW: belum lulus SO, IMK`). Khusus `SKR`, periksa seluruh MK wajib selain `SKR` pada `DaftarMK`, tanpa membatasi periode penawarannya. Karena TXT hanya menyimpan daftar lulus, kelulusan digunakan sebagai indikator MK telah diselesaikan.
+4. Jika `syaratBelumLulus()` menghasilkan string kosong, tampilkan MK pada daftar **bisa diambil**.
+5. Jika string tidak kosong, tampung kode MK dan alasan **belum bisa diambil** dalam `StringBuilder`, lalu cetak setelah penelusuran utama selesai.
 
 Urutan hasil mengikuti urutan baris `matakuliah.csv`.
 
@@ -185,6 +185,8 @@ Urutan hasil mengikuti urutan baris `matakuliah.csv`.
 | `mhs_05.txt` | Ganjil | 0 MK | 1 MK | 0 | semua lulus kecuali CAP; SKR ditolak |
 | `mhs_06.txt` | Ganjil | 1 MK | 0 MK | 6 | 36 MK wajib lulus; SKR diterima |
 
+Total SKS pada tabel dihitung dari MK yang dapat diambil, bukan dicetak sebagai total oleh program.
+
 Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt` sampai `output_mhs_06.txt`. `mhs_01`-`mhs_03` adalah data dari soal; `mhs_04`-`mhs_06` adalah data uji tambahan untuk aturan khusus Skripsi.
 
 ## 8. Batasan
@@ -192,6 +194,7 @@ Output lengkap masing-masing pengujian terdapat pada berkas `output_mhs_01.txt` 
 - Sistem mengikuti data yang tersedia pada file pendukung; tidak menentukan batas maksimal SKS KRS, IP semester, atau syarat akademik tambahan di luar aturan khusus Skripsi.
 - Dataset tidak mencantumkan prasyarat untuk beberapa MK seperti `CAP` dan `PKL`. Keduanya tetap mengikuti periode penawaran dan data prasyarat. Untuk `SKR`, aturan khusus instruksi terbaru mewajibkan seluruh MK wajib lain di daftar sudah lulus.
 - Mata kuliah yang sudah lulus atau tidak ditawarkan pada periode berikutnya tidak masuk ke dua daftar hasil.
+- Program mengasumsikan relasi prasyarat tidak bersiklus dan riwayat kelulusan mahasiswa konsisten. Rekursi berhenti pada prasyarat yang sudah lulus; kode menolak relasi MK terhadap dirinya sendiri, tetapi belum mendeteksi siklus antar-MK.
 - Oleh karena itu, output adalah **simulasi rekomendasi berdasarkan dataset**, bukan persetujuan KRS resmi.
 
 Pengujian tambahan (`mhs_04`-`mhs_06`): Skripsi dapat diambil pada Ganjil maupun Genap jika 36 MK wajib lainnya sudah lulus; jika CAP saja belum lulus, Skripsi tetap ditolak.
